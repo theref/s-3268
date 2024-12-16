@@ -43,7 +43,7 @@ export const LaunchNodeForm = () => {
     try {
       // Here you would typically make an API call to launch the node
       console.log("Launching node with data:", data);
-      toast.success("Node launch initiated! This may take a few minutes.");
+      toast.success("Node launch initiated! This will cost 0.1 ETH. Please confirm the transaction in your wallet.");
     } catch (error) {
       toast.error("Failed to launch node. Please try again.");
     } finally {
@@ -54,6 +54,15 @@ export const LaunchNodeForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-4 mb-6">
+          <p className="text-sm text-blue-400">
+            Launching a node requires a one-time payment of 0.1 ETH. Basic tier includes 24h monitoring. 
+            <span className="block mt-1">
+              Upgrade to premium for full monitoring history and email alerts.
+            </span>
+          </p>
+        </div>
+
         <FormField
           control={form.control}
           name="stakeSize"
