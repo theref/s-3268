@@ -1,10 +1,15 @@
 import Onboard from '@web3-onboard/core'
 import injectedModule from '@web3-onboard/injected-wallets'
+import walletConnectModule from '@web3-onboard/walletconnect'
 
 const injected = injectedModule()
+const walletConnect = walletConnectModule({
+  projectId: 'YOUR_PROJECT_ID', // You'll need to get this from WalletConnect
+  version: 2
+})
 
 const onboard = Onboard({
-  wallets: [injected],
+  wallets: [injected, walletConnect],
   chains: [
     {
       id: '0x1',

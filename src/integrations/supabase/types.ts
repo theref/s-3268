@@ -11,23 +11,24 @@ export type Database = {
     Tables: {
       users: {
         Row: {
-          id: string
-          wallet_address: string
           created_at: string
+          id: string
           last_connected_at: string
+          wallet_address: string
         }
         Insert: {
-          id?: string
-          wallet_address: string
           created_at?: string
+          id?: string
           last_connected_at?: string
+          wallet_address: string
         }
         Update: {
-          id?: string
-          wallet_address?: string
           created_at?: string
+          id?: string
           last_connected_at?: string
+          wallet_address?: string
         }
+        Relationships: []
       }
     }
     Views: {
