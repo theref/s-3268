@@ -14,18 +14,21 @@ export type Database = {
           created_at: string
           id: string
           last_connected_at: string
+          subscription_level: Database["public"]["Enums"]["subscription_level"]
           wallet_address: string
         }
         Insert: {
           created_at?: string
           id?: string
           last_connected_at?: string
+          subscription_level?: Database["public"]["Enums"]["subscription_level"]
           wallet_address: string
         }
         Update: {
           created_at?: string
           id?: string
           last_connected_at?: string
+          subscription_level?: Database["public"]["Enums"]["subscription_level"]
           wallet_address?: string
         }
         Relationships: []
@@ -38,7 +41,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      subscription_level: "basic" | "premium" | "enterprise"
     }
     CompositeTypes: {
       [_ in never]: never

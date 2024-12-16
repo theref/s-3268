@@ -5,6 +5,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Power, RefreshCw, Terminal, Trash2, Crown } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 // Sample monitoring data
 const monitoringData = Array.from({ length: 24 }, (_, i) => ({
@@ -29,7 +31,25 @@ interface NodeDetailsProps {
 
 export function NodeDetails({ node }: NodeDetailsProps) {
   const [isRestarting, setIsRestarting] = useState(false);
-  const isPremium = false; // This would normally come from your subscription state management
+  
+  // Fetch user subscription level
+  const { data: userData } = useQuery({
+    queryKey: ['user-subscription'],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No user found');
+      
+      const { data: userData } = await supabase
+        .from('users')
+        .select('subscription_level')
+        .eq('wallet_address', user.id)
+        .single();
+      
+      return userData;
+    }
+  });
+
+  const isPremium = userData?.subscription_level === 'premium' || userData?.subscription_level === 'enterprise';
 
   const handleRestart = () => {
     setIsRestarting(true);
