@@ -10,7 +10,6 @@ const monitoringData = Array.from({ length: 24 }, (_, i) => ({
   time: `${i}:00`,
   cpu: Math.floor(Math.random() * 60) + 20,
   memory: Math.floor(Math.random() * 40) + 30,
-  rewards: Math.floor(Math.random() * 10) + 5,
 }));
 
 interface NodeDetailsProps {
@@ -72,7 +71,6 @@ export function NodeDetails({ node }: NodeDetailsProps) {
             />
             <Line type="monotone" dataKey="cpu" name="CPU Usage" stroke="#3B82F6" strokeWidth={2} />
             <Line type="monotone" dataKey="memory" name="Memory Usage" stroke="#10B981" strokeWidth={2} />
-            <Line type="monotone" dataKey="rewards" name="Rewards/Hour" stroke="#F2FF44" strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       </div>
