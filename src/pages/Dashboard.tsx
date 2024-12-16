@@ -1,5 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { NodeDetails } from "@/components/NodeDetails";
+import { useState } from "react";
 
 const nodes = [
   { name: 'node1', status: 'running', region: 'us-west1', ip: '35.12.34.56', type: 'n1-standard-2', cost: '$0.02' },
@@ -10,6 +13,8 @@ const nodes = [
 ];
 
 const Dashboard = () => {
+  const [selectedNode, setSelectedNode] = useState<typeof nodes[0] | null>(null);
+
   return (
     <div className="min-h-screen bg-[#0F1116] text-white p-8">
       <h1 className="text-4xl font-medium mb-12">Welcome back, John</h1>
@@ -45,7 +50,11 @@ const Dashboard = () => {
           </TableHeader>
           <TableBody>
             {nodes.map((node) => (
-              <TableRow key={node.name} className="border-[#2A2F38] hover:bg-[#1A1D24]">
+              <TableRow 
+                key={node.name} 
+                className="border-[#2A2F38] hover:bg-[#1A1D24] cursor-pointer"
+                onClick={() => setSelectedNode(node)}
+              >
                 <TableCell>{node.name}</TableCell>
                 <TableCell>
                   <span className={`px-3 py-1 rounded-full text-sm ${
@@ -69,6 +78,15 @@ const Dashboard = () => {
           </TableBody>
         </Table>
       </div>
+
+      <Sheet open={!!selectedNode} onOpenChange={() => setSelectedNode(null)}>
+        <SheetContent className="bg-[#1A1D24] border-l-[#2A2F38] text-white w-full sm:max-w-xl">
+          <SheetHeader>
+            <SheetTitle className="text-white">Node Details</SheetTitle>
+          </SheetHeader>
+          {selectedNode && <NodeDetails node={selectedNode} />}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };
