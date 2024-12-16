@@ -5,6 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
+import { HelpCircle } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface FormData {
   stakeSize: string;
@@ -72,7 +79,27 @@ export const LaunchNodeForm = () => {
           name="apiKey"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Digital Ocean API Key</FormLabel>
+              <div className="flex items-center gap-2">
+                <FormLabel>Digital Ocean API Key</FormLabel>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <HelpCircle className="h-4 w-4 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-[#1A1D24] border-[#2A2F38] text-white">
+                      <p>You can generate an API key in your Digital Ocean account settings.</p>
+                      <a 
+                        href="https://docs.digitalocean.com/reference/api/create-personal-access-token/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300 block mt-1"
+                      >
+                        Learn how to create an API key
+                      </a>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <FormControl>
                 <Input
                   {...field}
