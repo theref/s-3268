@@ -13,13 +13,13 @@ const Hero = () => {
       
       <div className="relative z-10 max-w-[1200px] mx-auto px-6 text-center">
         <h1 className="text-[80px] leading-[1] font-medium tracking-[-0.02em] text-[#141413] mb-8">
-          Web3 SaaS<br />Platform
+          Threshold Network<br />Node Management
         </h1>
         
         <div className="max-w-[600px] mx-auto mb-12">
           <p className="text-xl text-[#141413]/80">
-            Connect your wallet and start building<br />
-            in the decentralized world.
+            Stake T tokens and earn rewards by running a node<br />
+            in the Threshold Network.
           </p>
         </div>
 

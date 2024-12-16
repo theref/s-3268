@@ -10,6 +10,7 @@ const monitoringData = Array.from({ length: 24 }, (_, i) => ({
   time: `${i}:00`,
   cpu: Math.floor(Math.random() * 60) + 20,
   memory: Math.floor(Math.random() * 40) + 30,
+  rewards: Math.floor(Math.random() * 10) + 5,
 }));
 
 interface NodeDetailsProps {
@@ -20,6 +21,9 @@ interface NodeDetailsProps {
     ip: string;
     type: string;
     cost: string;
+    staked: string;
+    rewards: string;
+    uptime: string;
   };
 }
 
@@ -28,7 +32,6 @@ export function NodeDetails({ node }: NodeDetailsProps) {
 
   const handleRestart = () => {
     setIsRestarting(true);
-    // Simulate restart
     setTimeout(() => setIsRestarting(false), 2000);
   };
 
@@ -36,12 +39,20 @@ export function NodeDetails({ node }: NodeDetailsProps) {
     <div className="space-y-6 pt-6">
       <div className="grid grid-cols-2 gap-4">
         <Card className="bg-[#242830] border-[#2A2F38] p-4">
-          <h3 className="text-sm text-gray-400 mb-2">CPU Usage</h3>
-          <p className="text-2xl font-medium">{monitoringData[monitoringData.length - 1].cpu}%</p>
+          <h3 className="text-sm text-gray-400 mb-2">Staked Amount</h3>
+          <p className="text-2xl font-medium">{node.staked}</p>
         </Card>
         <Card className="bg-[#242830] border-[#2A2F38] p-4">
-          <h3 className="text-sm text-gray-400 mb-2">Memory Usage</h3>
-          <p className="text-2xl font-medium">{monitoringData[monitoringData.length - 1].memory}%</p>
+          <h3 className="text-sm text-gray-400 mb-2">Total Rewards</h3>
+          <p className="text-2xl font-medium">{node.rewards}</p>
+        </Card>
+        <Card className="bg-[#242830] border-[#2A2F38] p-4">
+          <h3 className="text-sm text-gray-400 mb-2">Uptime</h3>
+          <p className="text-2xl font-medium">{node.uptime}</p>
+        </Card>
+        <Card className="bg-[#242830] border-[#2A2F38] p-4">
+          <h3 className="text-sm text-gray-400 mb-2">Region</h3>
+          <p className="text-2xl font-medium">{node.region}</p>
         </Card>
       </div>
 
@@ -59,8 +70,9 @@ export function NodeDetails({ node }: NodeDetailsProps) {
                 color: '#fff'
               }} 
             />
-            <Line type="monotone" dataKey="cpu" stroke="#3B82F6" strokeWidth={2} />
-            <Line type="monotone" dataKey="memory" stroke="#10B981" strokeWidth={2} />
+            <Line type="monotone" dataKey="cpu" name="CPU Usage" stroke="#3B82F6" strokeWidth={2} />
+            <Line type="monotone" dataKey="memory" name="Memory Usage" stroke="#10B981" strokeWidth={2} />
+            <Line type="monotone" dataKey="rewards" name="Rewards/Hour" stroke="#F2FF44" strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -75,7 +87,7 @@ export function NodeDetails({ node }: NodeDetailsProps) {
             disabled={isRestarting}
           >
             <RefreshCw className={`mr-2 h-4 w-4 ${isRestarting ? 'animate-spin' : ''}`} />
-            Restart
+            Restart Node
           </Button>
           <Button 
             variant="outline" 
@@ -91,7 +103,7 @@ export function NodeDetails({ node }: NodeDetailsProps) {
             }`}
           >
             <Power className="mr-2 h-4 w-4" />
-            {node.status === 'running' ? 'Stop' : 'Start'}
+            {node.status === 'running' ? 'Stop Node' : 'Start Node'}
           </Button>
           
           <AlertDialog>
@@ -101,14 +113,14 @@ export function NodeDetails({ node }: NodeDetailsProps) {
                 className="w-full bg-[#242830] border-[#2A2F38] hover:bg-[#2A2F38] text-red-500 hover:text-red-400"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete
+                Delete Node
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="bg-[#1A1D24] border-[#2A2F38] text-white">
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete Node</AlertDialogTitle>
                 <AlertDialogDescription className="text-gray-400">
-                  Are you sure you want to delete this node? This action cannot be undone.
+                  Are you sure you want to delete this node? This will unstake your T tokens and stop earning rewards.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

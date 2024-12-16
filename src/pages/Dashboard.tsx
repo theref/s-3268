@@ -1,41 +1,77 @@
-import { Card } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { NodeDetails } from "@/components/NodeDetails";
 import { useState } from "react";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { NodeDetails } from "@/components/NodeDetails";
 
+// Sample data - in a real app this would come from an API
 const nodes = [
-  { name: 'node1', status: 'running', region: 'us-west1', ip: '35.12.34.56', type: 'n1-standard-2', cost: '$0.02' },
-  { name: 'node2', status: 'stopped', region: 'us-central1', ip: '35.12.34.56', type: 'e2-medium', cost: '$0.01' },
-  { name: 'node3', status: 'running', region: 'us-east1', ip: '35.12.34.56', type: 'n2-standard-4', cost: '$0.04' },
-  { name: 'node4', status: 'running', region: 'us-west1', ip: '35.12.34.56', type: 'n1-standard-2', cost: '$0.02' },
-  { name: 'node5', status: 'stopped', region: 'us-central1', ip: '35.12.34.56', type: 'e2-medium', cost: '$0.01' },
+  { 
+    name: 'node1', 
+    status: 'running', 
+    region: 'us-west1', 
+    ip: '35.12.34.56', 
+    type: 'n1-standard-2', 
+    cost: '$0.02',
+    staked: '100,000 T',
+    rewards: '250 T',
+    uptime: '99.9%'
+  },
+  { 
+    name: 'node2', 
+    status: 'stopped', 
+    region: 'us-central1', 
+    ip: '35.12.34.56', 
+    type: 'e2-medium', 
+    cost: '$0.01',
+    staked: '75,000 T',
+    rewards: '180 T',
+    uptime: '95.5%'
+  },
+  { 
+    name: 'node3', 
+    status: 'running', 
+    region: 'us-east1', 
+    ip: '35.12.34.56', 
+    type: 'n2-standard-4', 
+    cost: '$0.04',
+    staked: '150,000 T',
+    rewards: '375 T',
+    uptime: '99.8%'
+  },
 ];
 
 const Dashboard = () => {
   const [selectedNode, setSelectedNode] = useState<typeof nodes[0] | null>(null);
 
+  const totalStaked = nodes.reduce((acc, node) => {
+    const staked = parseInt(node.staked.replace(/,/g, ''));
+    return acc + staked;
+  }, 0);
+
+  const totalRewards = nodes.reduce((acc, node) => {
+    const rewards = parseInt(node.rewards.replace(/,/g, ''));
+    return acc + rewards;
+  }, 0);
+
   return (
     <div className="min-h-screen bg-[#0F1116] text-white p-8">
-      <h1 className="text-4xl font-medium mb-12">Welcome back, John</h1>
+      <h1 className="text-4xl font-medium mb-12">Node Dashboard</h1>
       
-      <h2 className="text-2xl mb-6">Overview</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <Card className="bg-[#1A1D24] border-[#2A2F38] p-6">
+        <div className="bg-[#1A1D24] border border-[#2A2F38] rounded-lg p-6">
+          <h3 className="text-sm text-gray-400 mb-2">Total Staked</h3>
+          <p className="text-4xl font-medium">{totalStaked.toLocaleString()} T</p>
+        </div>
+        <div className="bg-[#1A1D24] border border-[#2A2F38] rounded-lg p-6">
+          <h3 className="text-sm text-gray-400 mb-2">Total Rewards</h3>
+          <p className="text-4xl font-medium">{totalRewards.toLocaleString()} T</p>
+        </div>
+        <div className="bg-[#1A1D24] border border-[#2A2F38] rounded-lg p-6">
           <h3 className="text-sm text-gray-400 mb-2">Active Nodes</h3>
-          <p className="text-4xl font-medium">5</p>
-        </Card>
-        <Card className="bg-[#1A1D24] border-[#2A2F38] p-6">
-          <h3 className="text-sm text-gray-400 mb-2">Total Nodes</h3>
-          <p className="text-4xl font-medium">10</p>
-        </Card>
-        <Card className="bg-[#1A1D24] border-[#2A2F38] p-6">
-          <h3 className="text-sm text-gray-400 mb-2">Total Cost</h3>
-          <p className="text-4xl font-medium">$0.00</p>
-        </Card>
+          <p className="text-4xl font-medium">{nodes.filter(n => n.status === 'running').length}</p>
+        </div>
       </div>
 
-      <h2 className="text-2xl mb-6">Your Nodes</h2>
       <div className="rounded-lg border border-[#2A2F38] overflow-hidden">
         <Table>
           <TableHeader>
@@ -43,9 +79,9 @@ const Dashboard = () => {
               <TableHead className="text-gray-400">Name</TableHead>
               <TableHead className="text-gray-400">Status</TableHead>
               <TableHead className="text-gray-400">Region</TableHead>
-              <TableHead className="text-gray-400">IP</TableHead>
-              <TableHead className="text-gray-400">Type</TableHead>
-              <TableHead className="text-gray-400">Cost</TableHead>
+              <TableHead className="text-gray-400">Staked</TableHead>
+              <TableHead className="text-gray-400">Rewards</TableHead>
+              <TableHead className="text-gray-400">Uptime</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -66,13 +102,9 @@ const Dashboard = () => {
                   </span>
                 </TableCell>
                 <TableCell>{node.region}</TableCell>
-                <TableCell>{node.ip}</TableCell>
-                <TableCell>
-                  <span className="px-3 py-1 rounded-full bg-[#2D3748] text-gray-300">
-                    {node.type}
-                  </span>
-                </TableCell>
-                <TableCell>{node.cost}</TableCell>
+                <TableCell>{node.staked}</TableCell>
+                <TableCell>{node.rewards}</TableCell>
+                <TableCell>{node.uptime}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -81,9 +113,6 @@ const Dashboard = () => {
 
       <Sheet open={!!selectedNode} onOpenChange={() => setSelectedNode(null)}>
         <SheetContent className="bg-[#1A1D24] border-l-[#2A2F38] text-white w-full sm:max-w-xl">
-          <SheetHeader>
-            <SheetTitle className="text-white">Node Details</SheetTitle>
-          </SheetHeader>
           {selectedNode && <NodeDetails node={selectedNode} />}
         </SheetContent>
       </Sheet>
