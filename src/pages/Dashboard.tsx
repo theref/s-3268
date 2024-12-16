@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { NodeDetails } from "@/components/NodeDetails";
+import { LaunchNodeForm } from "@/components/LaunchNodeForm";
 
-// Sample data - in a real app this would come from an API
 const nodes = [
   { 
     name: 'node1', 
@@ -55,7 +57,22 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#0F1116] text-white p-8">
-      <h1 className="text-4xl font-medium mb-12">Node Dashboard</h1>
+      <div className="flex justify-between items-center mb-12">
+        <h1 className="text-4xl font-medium">Node Dashboard</h1>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              Launch New Node
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-[#1A1D24] border-[#2A2F38] text-white">
+            <DialogHeader>
+              <DialogTitle>Launch New Node</DialogTitle>
+            </DialogHeader>
+            <LaunchNodeForm />
+          </DialogContent>
+        </Dialog>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         <div className="bg-[#1A1D24] border border-[#2A2F38] rounded-lg p-6">
