@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { NodeDetails } from "@/components/NodeDetails";
 import { LaunchNodeForm } from "@/components/LaunchNodeForm";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { WalletIcon } from "lucide-react";
 import { SubscriptionTiers } from "@/components/SubscriptionTiers";
-import onboard from "@/lib/web3";
+import { WalletConnection } from "@/components/WalletConnection";
+import { NodeStats } from "@/components/NodeStats";
 
 const nodes = [
   { 
@@ -48,51 +47,6 @@ const nodes = [
 
 const Dashboard = () => {
   const [selectedNode, setSelectedNode] = useState<typeof nodes[0] | null>(null);
-  const [walletAddress, setWalletAddress] = useState("");
-  const [connecting, setConnecting] = useState(false);
-
-  useEffect(() => {
-    // Check if already connected
-    const checkConnection = async () => {
-      const wallets = await onboard.state.get().wallets;
-      if (wallets.length > 0) {
-        setWalletAddress(wallets[0].accounts[0].address);
-      }
-    };
-    checkConnection();
-  }, []);
-
-  const handleConnect = async () => {
-    try {
-      setConnecting(true);
-      const wallets = await onboard.connectWallet();
-      if (wallets[0]) {
-        setWalletAddress(wallets[0].accounts[0].address);
-      }
-    } catch (error) {
-      console.error('Failed to connect wallet:', error);
-    } finally {
-      setConnecting(false);
-    }
-  };
-
-  const handleDisconnect = async () => {
-    const [primaryWallet] = onboard.state.get().wallets;
-    if (primaryWallet) {
-      await onboard.disconnectWallet({ label: primaryWallet.label });
-      setWalletAddress("");
-    }
-  };
-
-  const totalStaked = nodes.reduce((acc, node) => {
-    const staked = parseInt(node.staked.replace(/,/g, ''));
-    return acc + staked;
-  }, 0);
-
-  const totalRewards = nodes.reduce((acc, node) => {
-    const rewards = parseInt(node.rewards.replace(/,/g, ''));
-    return acc + rewards;
-  }, 0);
 
   return (
     <div className="min-h-screen bg-[#0F1116] text-white p-8">
@@ -114,48 +68,12 @@ const Dashboard = () => {
             </DialogContent>
           </Dialog>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="outline" 
-                className="border-[#2A2F38] bg-[#1A1D24] text-white hover:bg-[#2A2F38]"
-                onClick={!walletAddress ? handleConnect : undefined}
-                disabled={connecting}
-              >
-                <WalletIcon className="w-4 h-4 mr-2" />
-                {connecting ? "Connecting..." : walletAddress ? walletAddress : "Connect Wallet"}
-              </Button>
-            </DropdownMenuTrigger>
-            {walletAddress && (
-              <DropdownMenuContent className="bg-[#1A1D24] border-[#2A2F38] text-white">
-                <DropdownMenuItem 
-                  onClick={handleDisconnect}
-                  className="hover:bg-[#2A2F38] cursor-pointer"
-                >
-                  Disconnect
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            )}
-          </DropdownMenu>
+          <WalletConnection />
         </div>
       </div>
 
       <SubscriptionTiers />
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="bg-[#1A1D24] border border-[#2A2F38] rounded-lg p-6">
-          <h3 className="text-sm text-gray-400 mb-2">Total Staked</h3>
-          <p className="text-4xl font-medium">{totalStaked.toLocaleString()} T</p>
-        </div>
-        <div className="bg-[#1A1D24] border border-[#2A2F38] rounded-lg p-6">
-          <h3 className="text-sm text-gray-400 mb-2">Total Rewards</h3>
-          <p className="text-4xl font-medium">{totalRewards.toLocaleString()} T</p>
-        </div>
-        <div className="bg-[#1A1D24] border border-[#2A2F38] rounded-lg p-6">
-          <h3 className="text-sm text-gray-400 mb-2">Active Nodes</h3>
-          <p className="text-4xl font-medium">{nodes.filter(n => n.status === 'running').length}</p>
-        </div>
-      </div>
+      <NodeStats nodes={nodes} />
 
       <div className="rounded-lg border border-[#2A2F38] overflow-hidden">
         <Table>
