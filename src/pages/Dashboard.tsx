@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { NodeDetails } from "@/components/NodeDetails";
 import { LaunchNodeForm } from "@/components/LaunchNodeForm";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { WalletIcon } from "lucide-react";
 
 const nodes = [
   { 
@@ -44,6 +46,14 @@ const nodes = [
 
 const Dashboard = () => {
   const [selectedNode, setSelectedNode] = useState<typeof nodes[0] | null>(null);
+  
+  // Mock wallet connection - replace with your actual wallet connection logic
+  const [walletAddress, setWalletAddress] = useState("0x1234...5678");
+
+  const handleDisconnect = () => {
+    // Add your wallet disconnect logic here
+    setWalletAddress("");
+  };
 
   const totalStaked = nodes.reduce((acc, node) => {
     const staked = parseInt(node.staked.replace(/,/g, ''));
@@ -59,19 +69,39 @@ const Dashboard = () => {
     <div className="min-h-screen bg-[#0F1116] text-white p-8">
       <div className="flex justify-between items-center mb-12">
         <h1 className="text-4xl font-medium">Node Dashboard</h1>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              Launch New Node
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="bg-[#1A1D24] border-[#2A2F38] text-white">
-            <DialogHeader>
-              <DialogTitle>Launch New Node</DialogTitle>
-            </DialogHeader>
-            <LaunchNodeForm />
-          </DialogContent>
-        </Dialog>
+        
+        <div className="flex items-center gap-4">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="bg-blue-600 hover:bg-blue-700">
+                Launch New Node
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-[#1A1D24] border-[#2A2F38] text-white">
+              <DialogHeader>
+                <DialogTitle>Launch New Node</DialogTitle>
+              </DialogHeader>
+              <LaunchNodeForm />
+            </DialogContent>
+          </Dialog>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="border-[#2A2F38] bg-[#1A1D24] text-white hover:bg-[#2A2F38]">
+                <WalletIcon className="w-4 h-4 mr-2" />
+                {walletAddress ? walletAddress : "Connect Wallet"}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-[#1A1D24] border-[#2A2F38] text-white">
+              <DropdownMenuItem 
+                onClick={handleDisconnect}
+                className="hover:bg-[#2A2F38] cursor-pointer"
+              >
+                Disconnect
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
