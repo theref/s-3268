@@ -1,11 +1,12 @@
+import { useNavigate } from "react-router-dom";
+
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="relative min-h-screen flex items-center justify-center pt-24">
-      {/* Background pattern */}
-      <div className="absolute inset-0 bg-[#F8FAFF]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at center, #E2E8F3 2px, transparent 2px)`,
-          backgroundSize: '48px 48px',
+    <div className="relative min-h-screen flex items-center">
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 dot-pattern" style={{
           opacity: 0.5
         }}></div>
       </div>
@@ -22,7 +23,10 @@ const Hero = () => {
           </p>
         </div>
 
-        <button className="inline-flex items-center gap-2 bg-[#F2FF44] text-[#141413] px-6 py-3 rounded-lg font-medium hover:bg-[#E6FF00] transition-colors">
+        <button 
+          onClick={() => navigate('/dashboard')}
+          className="inline-flex items-center gap-2 bg-[#F2FF44] text-[#141413] px-6 py-3 rounded-lg font-medium hover:bg-[#E6FF00] transition-colors"
+        >
           Launch App
         </button>
       </div>
